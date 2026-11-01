@@ -1,0 +1,1 @@
+{"name": "슈팅팡", "short_name": "슈팅팡", "description": "박현아가 심심해서 만든 비상업적 용도 슈팅 퍼즐 게임. 팡팡이를 쏘아 같은 친구 셋이면 팡!", "start_url": "./", "scope": "./", "display": "standalone", "orientation": "portrait", "background_color": "#0b0b0f", "theme_color": "#0b0b0f", "icons": [{"src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any"}]}
