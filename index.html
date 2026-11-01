@@ -113,7 +113,7 @@ background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.5px),ra
 #bgmB.off .pix,#sfxB.off .pix{opacity:.3}
 .bw{align-items:center!important}
 </style>
-<script>/* 옛 버전 캐시 자동 갱신 */(function(){var V="1793528929";try{fetch(location.pathname+"?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var V="(\d+)"/);if(m&&m[1]!==V&&!/[?&]v=/.test(location.search+"")){location.replace(location.pathname+"?v="+m[1])}else if(m&&m[1]!==V&&location.search.indexOf("v="+m[1])<0){location.replace(location.pathname+"?v="+m[1])}if(!(m&&m[1]!==V)&&window.__phDone)__phDone()}).catch(function(){window.__phDone&&__phDone()})}catch(e){window.__phDone&&__phDone()}})();</script>
+<script>/* 옛 버전 캐시 자동 갱신 */(function(){var V="1793535737";try{fetch(location.pathname+"?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var V="(\d+)"/);if(m&&m[1]!==V&&!/[?&]v=/.test(location.search+"")){location.replace(location.pathname+"?v="+m[1])}else if(m&&m[1]!==V&&location.search.indexOf("v="+m[1])<0){location.replace(location.pathname+"?v="+m[1])}if(!(m&&m[1]!==V)&&window.__phDone)__phDone()}).catch(function(){window.__phDone&&__phDone()})}catch(e){window.__phDone&&__phDone()}})();</script>
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 카톡 등 인앱 브라우저: 실제 보이는 높이로 화면 맞춤 */(function(){var d=document.documentElement;function f(){var h=window.innerHeight,v=window.visualViewport;if(v&&v.height>0)h=Math.min(h,Math.round(v.height));d.style.setProperty('--app-h',h+'px');if(typeof layout==='function')requestAnimationFrame(function(){layout()})}f();addEventListener('resize',f);if(window.visualViewport)visualViewport.addEventListener('resize',f);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(f);addEventListener('orientationchange',function(){setTimeout(f,300)});addEventListener('pageshow',f);setTimeout(f,250);setTimeout(f,1000)})();</script>
 <style>html,body{height:var(--app-h,100%)!important}@media (max-width:519px){.ph{bottom:auto!important;height:var(--app-h,100%)!important}}</style>
@@ -203,8 +203,10 @@ for(const c of [1,2,3,4,5,6,7,8,9,10])for(const m of ["","b","o","x"]){const im=
   setTimeout(()=>{c=c%6+1;shot.src=IMG[""+c].src;shot.getAnimations().forEach(a=>a.cancel());shot.animate([{transform:T(Y0,.3),opacity:0},{transform:T(Y0,1),opacity:1}],{duration:400,easing:"ease-out"})},1500)},2600)})();
 /* ---------- 게임판 (논리 좌표 420×620 · 화면에 맞춰 선명하게 확대) ---------- */
 const W=420,R=21,STEP=42,DY=Math.sqrt(3)*R,TOP=29,LIMIT=490,LAUNCH={x:210,y:559};let H=620; /* 판 높이: 기기 화면 비율에 맞춰 620~800 (경계선 위치는 늘 같고 발사대만 아래로 → 난도는 기기와 상관없이 같음) */
-const LEVELS={easy:{limit:10,rows:5,colors:4,k:1.1},normal:{limit:20,rows:6,colors:5,k:.95},hard:{limit:30,rows:7,colors:6,k:.85},master:{limit:50,rows:8,colors:8,k:.9}};
-/* 난도별 팡팡이 종류 (2026-11-01): EASY 4→5 · NORMAL 5→6 · HARD 6→7 · MASTER 8→9종 + 회색 방해 팡팡이 (10종 모두) — 스테이지 중간부터 1종 추가 */
+/* 난도 (2026-11-01 조정): EASY = 예전 NORMAL · NORMAL = 예전 HARD · HARD = 그 사이 · MASTER = 종류를 줄이고 회색 방해 추가
+   colors 시작 종류 · add 스테이지 진행에 따라 늘어나는 종류 · k 발사 여유 · cnt/grow 판 크기 · stick 같은 색 뭉침 · jag 가장자리 들쭉날쭉 · gray 회색 방해 비율 */
+const LEVELS={easy:{limit:10,colors:5,add:1,k:.95,cnt:36,grow:10,stick:.68,jag:.35,gray:0},normal:{limit:20,colors:6,add:1,k:.85,cnt:48,grow:12,stick:.58,jag:.7,gray:0},hard:{limit:30,colors:7,add:0,k:.88,cnt:50,grow:12,stick:.56,jag:.8,gray:0},master:{limit:50,colors:7,add:1,k:.9,cnt:54,grow:12,stick:.53,jag:.85,gray:.04}};
+/* 난도별 팡팡이 종류: EASY 5→6 · NORMAL 6→7 · HARD 7 · MASTER 7→8 + 회색 방해 팡팡이 */
 const KINDS=[1,3,4,2,5,6,7,8,10],GRAY=9;
 const cv=$("cv"),cx=cv.getContext("2d"),well=$("well");
 let SC=1,DPR=1,state=null,lastT=0,NOW=0,MODE="normal",stage=1,score=0,shots=0,count0=1,board=[],shot=null,angle=-Math.PI/2,current=1,next=2,combo=0,maxCombo=0,busy=false,ALLC=false,loadT=0;
@@ -225,19 +227,19 @@ function pick(){const cs=available();return cs[Math.floor(Math.random()*cs.lengt
 function createStage(mode,number){
   const rank=["easy","normal","hard","master"].indexOf(mode),level=LEVELS[mode];
   const progress=Math.min(1,(number-1)/(level.limit-1));
-  const count=[24,36,48,54][rank]+Math.floor(progress*[8,10,12,12][rank]); /* MASTER는 종류가 많아 판 크기를 줄임 */
+  const count=level.cnt+Math.floor(progress*level.grow);
   const pattern=(number-1)%5;let seed=number*7919+rank*104729+1;
   const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
   const cells=[];
-  for(let r=0;r<10;r++)for(let c=0;c<(r%2?9:10);c++){const x=c+r%2*.5;const shape=[0,Math.abs(x-4.5)*.24,(x%3)*.45,Math.sin(x*1.4)*.65,Math.abs(x-2)*.18+Math.cos(x*2)*.5][pattern];cells.push({r,c,priority:r+shape*(1+progress*.8)+random()*rank*.35}) /* 어려울수록 가장자리 모양이 들쭉날쭉 */}
+  for(let r=0;r<10;r++)for(let c=0;c<(r%2?9:10);c++){const x=c+r%2*.5;const shape=[0,Math.abs(x-4.5)*.24,(x%3)*.45,Math.sin(x*1.4)*.65,Math.abs(x-2)*.18+Math.cos(x*2)*.5][pattern];cells.push({r,c,priority:r+shape*(1+progress*.8)+random()*level.jag}) /* 어려울수록 가장자리 모양이 들쭉날쭉 */}
   cells.sort((a,b)=>a.priority-b.priority||a.c-b.c);
   const chosen=[];
   while(chosen.length<count){const i=cells.findIndex(a=>a.r===0||chosen.some(b=>near(a,b)));if(i<0)break;chosen.push(cells.splice(i,1)[0])}
   chosen.sort((a,b)=>a.r-b.r||a.c-b.c);
-  const colors=Math.min(KINDS.length,level.colors+(progress>=.5?1:0)),stick=[.76,.68,.58,.5][rank]-progress*.1; /* 같은 색 뭉침 정도: 어려울수록 섞임 */
+  const colors=Math.min(KINDS.length,level.colors+Math.min(level.add,Math.floor(progress*(level.add+1)))),stick=level.stick-progress*.1; /* 같은 색 뭉침 정도: 어려울수록 섞임 */
   for(const cell of chosen){const nb=chosen.filter(n=>n.color&&near(n,cell));
     cell.color=nb.length&&random()<stick?nb[Math.floor(random()*nb.length)].color:KINDS[Math.floor(random()*colors)];delete cell.priority;cell.lt=-1e9;cell.ph=Math.random()*6.28}
-  if(mode==="master")for(const cell of chosen)if(cell.r>0&&random()<.035+progress*.035)cell.color=GRAY; /* MASTER: 회색 방해 팡팡이 — 같은 색으로 못 터뜨리고 떨어뜨려야 함 */
+  if(level.gray)for(const cell of chosen)if(cell.r>0&&random()<level.gray*(1+progress))cell.color=GRAY; /* MASTER: 회색 방해 팡팡이 — 같은 색으로 못 터뜨리고 떨어뜨려야 함 */
   return chosen}
 function snap(x,y){const occ=new Set(board.map(b=>key(b.r,b.c))),cand=[];
   for(let r=0;r<14;r++)for(let c=0;c<10;c++){if(!valid(r,c)||occ.has(key(r,c)))continue;const p=pos(r,c),b={r,c};if(r!==0&&!neighbors(b).length)continue;cand.push({r,c,d:Math.hypot(x-p.x,y-p.y)})}
@@ -401,7 +403,7 @@ addEventListener("resize",layout);
 hud();layout();requestAnimationFrame(tick);setTimeout(layout,300);
 </script>
 
-<script src="../games/ph.js?v=41"></script><script id="hapJs">/* 진동: 터질 때 · 콤보 · 게임오버 */(function(){var H=function(p){if(p&&window.phHaptic)phHaptic(p)};function w(n,p){var f=window[n];if(typeof f!=='function')return;window[n]=function(){var r=f.apply(this,arguments);try{H(typeof p==='function'?p.apply(this,arguments):p)}catch(e){}return r}}function o(obj,n,p){if(!obj||typeof obj[n]!=='function')return;var f=obj[n];obj[n]=function(){var r=f.apply(this,arguments);H(p);return r}}
+<script src="../games/ph.js?v=42"></script><script id="hapJs">/* 진동: 터질 때 · 콤보 · 게임오버 */(function(){var H=function(p){if(p&&window.phHaptic)phHaptic(p)};function w(n,p){var f=window[n];if(typeof f!=='function')return;window[n]=function(){var r=f.apply(this,arguments);try{H(typeof p==='function'?p.apply(this,arguments):p)}catch(e){}return r}}function o(obj,n,p){if(!obj||typeof obj[n]!=='function')return;var f=obj[n];obj[n]=function(){var r=f.apply(this,arguments);H(p);return r}}
 w('sfx',function(ch){return ch>=3?[18,30,26]:ch>=2?[14,30,18]:12});w('gameOver',[60,40,120])})();</script>
 <style id="frameUnify">/* 2026-10-31 게임 틀 통일: 벽돌깨기·구슬팡·트윈스타와 같은 바깥판·안쪽판·필드 */
 html,html body{background:#17171f!important}
