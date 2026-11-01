@@ -113,7 +113,7 @@ background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.5px),ra
 #bgmB.off .pix,#sfxB.off .pix{opacity:.3}
 .bw{align-items:center!important}
 </style>
-<script>/* 옛 버전 캐시 자동 갱신 */(function(){var V="1793535900";try{fetch(location.pathname+"?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var V="(\d+)"/);if(m&&m[1]!==V&&!/[?&]v=/.test(location.search+"")){location.replace(location.pathname+"?v="+m[1])}else if(m&&m[1]!==V&&location.search.indexOf("v="+m[1])<0){location.replace(location.pathname+"?v="+m[1])}if(!(m&&m[1]!==V)&&window.__phDone)__phDone()}).catch(function(){window.__phDone&&__phDone()})}catch(e){window.__phDone&&__phDone()}})();</script>
+<script>/* 옛 버전 캐시 자동 갱신 */(function(){var V="1793536300";try{fetch(location.pathname+"?_="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/var V="(\d+)"/);if(m&&m[1]!==V&&!/[?&]v=/.test(location.search+"")){location.replace(location.pathname+"?v="+m[1])}else if(m&&m[1]!==V&&location.search.indexOf("v="+m[1])<0){location.replace(location.pathname+"?v="+m[1])}if(!(m&&m[1]!==V)&&window.__phDone)__phDone()}).catch(function(){window.__phDone&&__phDone()})}catch(e){window.__phDone&&__phDone()}})();</script>
 <meta http-equiv="Cache-Control" content="no-cache">
 <script>/* 카톡 등 인앱 브라우저: 실제 보이는 높이로 화면 맞춤 */(function(){var d=document.documentElement;function f(){var h=window.innerHeight,v=window.visualViewport;if(v&&v.height>0)h=Math.min(h,Math.round(v.height));d.style.setProperty('--app-h',h+'px');if(typeof layout==='function')requestAnimationFrame(function(){layout()})}f();addEventListener('resize',f);if(window.visualViewport)visualViewport.addEventListener('resize',f);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(f);addEventListener('orientationchange',function(){setTimeout(f,300)});addEventListener('pageshow',f);setTimeout(f,250);setTimeout(f,1000)})();</script>
 <style>html,body{height:var(--app-h,100%)!important}@media (max-width:519px){.ph{bottom:auto!important;height:var(--app-h,100%)!important}}</style>
@@ -195,7 +195,7 @@ for(const c of [1,2,3,4,5,6,7,8,9,10])for(const m of ["","b","o","x"]){const im=
  [["position","relative"],["display","block"],["width",W0+"px"],["height",H0+"px"],["overflow","visible"]].forEach(([k,v])=>box.style.setProperty(k,v,"important"));
  const tr=document.createElement("i");tr.style.cssText="position:absolute;left:"+(W0/2-7)+"px;top:0;width:14px;height:"+H0+"px;border-radius:7px;transform-origin:50% 100%;opacity:0;pointer-events:none";box.appendChild(tr);
  const shot=new Image();shot.alt="";shot.src=IMG["4"].src;shot.style.cssText="position:absolute;left:0;top:0;width:"+S+"px;height:"+S+"px;transform:translate("+X0+"px,"+Y0+"px)";box.appendChild(shot);
- if(matchMedia("(prefers-reduced-motion: reduce)").matches||!shot.animate)return;
+ if(!shot.animate)return; /* 다른 게임처럼 '동작 줄이기' 설정과 상관없이 움직임 */
  const T=(y,s=1)=>"translate("+X0+"px,"+y+"px) scale("+s+")",CL={1:"255,90,110",2:"240,225,190",3:"90,160,255",4:"246,165,30",5:"230,110,220",6:"120,210,90"};let c=4;
  setInterval(()=>{if(!box.offsetParent)return;tr.style.background="linear-gradient(to top,rgba("+CL[c]+",0),rgba("+CL[c]+",.75))";
   shot.animate([{transform:T(Y0),offset:0},{transform:T(Y0+4,.92),offset:.2},{transform:T(4,1),opacity:1,offset:.75},{transform:T(-14,1),opacity:0,offset:1}],{duration:1200,easing:"cubic-bezier(.45,0,.75,.6)",fill:"forwards"});
