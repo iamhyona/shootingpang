@@ -18,9 +18,40 @@ function pick(){const colors=available();return colors[Math.floor(Math.random()*
 function beep(freq=440){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.frequency.setValueAtTime(freq,audio.currentTime);o.frequency.exponentialRampToValueAtTime(freq/2,audio.currentTime+.13);g.gain.setValueAtTime(.035*volume,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.15);o.start();o.stop(audio.currentTime+.16)}catch{}}
 function hud(){el('score').textContent=score.toLocaleString();el('stage').textContent=String(stage).padStart(2,'0');el('shots').textContent=shots;el('next').innerHTML='<img alt="다음 팡팡이" src="'+art[next].src+'">';el('swap').disabled=state!=='playing'||!!shot;el('fire').disabled=state!=='playing'||!!shot;}
 function announce(t){toast=t;toastTime=1.1;el('live').textContent=t}
-function init(reset=true){if(reset){stage=1;score=0}board=[];particles=[];shot=null;combo=0;angle=-Math.PI/2;const level=LEVELS[difficulty],rows=Math.min(level.rows+Math.floor((stage-1)/2),9),colors=Math.min(level.colors+Math.floor((stage-1)/3),6);for(let r=0;r<rows;r++)for(let c=0;c<(r%2?9:10);c++)board.push({r,c,color:1+((Math.floor(c/2)+Math.floor(r/2)+stage)%colors)});shots=level.shots+rows*2;current=pick();next=pick();state='playing';window.PangMusic?.unlock();document.body.dataset.phlv=difficulty;document.body.style.setProperty('--phlvb',level.b);document.body.style.setProperty('--phlvt',level.t);el('levelName').textContent=difficulty.toUpperCase();el('overlay').hidden=true;el('result').hidden=true;hud();announce('STAGE '+stage);cv.focus()}
+// Deterministic layouts keep retries fair. Every column hangs from the ceiling.
+function createStage(mode,number){
+ const rank=['easy','normal','hard','master'].indexOf(mode),level=LEVELS[mode];
+ const progress=Math.min(1,(number-1)/(level.limit-1));
+ const count=[24,38,52,66][rank]+Math.floor(progress*12);
+ const pattern=(number-1)%5;
+ let seed=number*7919+rank*104729+1;
+ const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296};
+ const cells=[];
+ for(let r=0;r<10;r++)for(let c=0;c<(r%2?9:10);c++){
+  const x=c+r%2*.5;
+  const shape=[0,Math.abs(x-4.5)*.24,(x%3)*.45,Math.sin(x*1.4)*.65,Math.abs(x-2)*.18+Math.cos(x*2)*.5][pattern];
+  cells.push({r,c,priority:r+shape*(1+progress*.8)});
+ }
+ cells.sort((a,b)=>a.priority-b.priority||a.c-b.c);
+ const chosen=[];
+ while(chosen.length<count){
+  const index=cells.findIndex(a=>a.r===0||chosen.some(b=>Math.hypot(pos(a.r,a.c).x-pos(b.r,b.c).x,pos(a.r,a.c).y-pos(b.r,b.c).y)<STEP+1));
+  if(index<0)throw new Error('Disconnected stage');
+  chosen.push(cells.splice(index,1)[0]);
+ }
+ chosen.sort((a,b)=>a.r-b.r||a.c-b.c);
+ const colors=Math.min(6,level.colors+Math.floor(progress*2));
+ for(const cell of chosen){
+  const near=chosen.filter(n=>n.color&&Math.hypot(pos(n.r,n.c).x-pos(cell.r,cell.c).x,pos(n.r,n.c).y-pos(cell.r,cell.c).y)<STEP+1);
+  // Early stages use generous color groups; later stages mix smaller groups.
+  cell.color=near.length&&random()<.78-rank*.09-progress*.22?near[Math.floor(random()*near.length)].color:1+Math.floor(random()*colors);
+  delete cell.priority;
+ }
+ return chosen;
+}
+function init(reset=true){if(reset){stage=1;score=0}board=[];particles=[];shot=null;combo=0;angle=-Math.PI/2;const level=LEVELS[difficulty];board=createStage(difficulty,stage);shots=level.shots+Math.ceil(board.length/5);current=pick();next=pick();state='playing';window.PangMusic?.unlock();document.body.dataset.phlv=difficulty;document.body.style.setProperty('--phlvb',level.b);document.body.style.setProperty('--phlvt',level.t);el('levelName').textContent=difficulty.toUpperCase();el('overlay').hidden=true;el('result').hidden=true;hud();announce('STAGE '+stage);cv.focus()}
 function modal(title,detail,label){el('message').textContent=title;el('detail').innerHTML=detail;el('continue').textContent=label;el('result').hidden=false;hud()}
-function finish(win){const complete=win&&stage>=LEVELS[difficulty].limit;state=complete?'complete':win?'won':'lost';if(win)score+=shots*30;best=Math.max(best,score);try{localStorage.setItem('shooting-pang-best',best)}catch{}el('best').textContent='MY BEST  '+best.toLocaleString();modal(complete?'ALL CLEAR!':win?'STAGE CLEAR!':'다시 한 번, 팡!',win?(complete?difficulty.toUpperCase()+' '+LEVELS[difficulty].limit+' 스테이지 완료!':'모든 팡팡이를 구했어요!')+'<br>남은 발사 보너스 +'+shots*30:'팡팡이가 경계선에 닿거나 발사를 모두 썼어요.<br>벽 반사로 연결부를 노려보세요.',complete?'PLAY AGAIN':win?'NEXT STAGE':'RETRY');hud();beep(win?900:180)}
+function finish(win){const complete=win&&stage>=LEVELS[difficulty].limit;state=complete?'complete':win?'won':'lost';if(win)score+=shots*30;best=Math.max(best,score);try{localStorage.setItem('shooting-pang-best',best)}catch{}el('best').textContent='MY BEST  '+best.toLocaleString();modal(complete?'ALL CLEAR!':win?'STAGE CLEAR!':'다시 한 번, 팡!',win?(complete?difficulty.toUpperCase()+' '+LEVELS[difficulty].limit+' 스테이지 완료!':'모든 팡팡이를 구했어요!')+'<br>남은 발사 보너스 +'+shots*30:'팡팡이가 경계선에 닿거나 발사를 모두 썼어요.<br>벽 반사로 연결부를 노려보세요.',complete?'PLAY AGAIN':win?'NEXT STAGE':'RETRY');if(!win||complete)showEnd();hud();beep(win?900:180)}
 function explode(b,fall){const p=pos(b.r,b.c);particles.push({...p,color:b.color,vx:(Math.random()-.5)*120,vy:fall?60:-70,life:fall?1.35:.5,fall});}
 function resolve(cell){board.push(cell);const matches=group(cell,n=>n.color===cell.color);if(matches.length>=3){combo++;matches.forEach(b=>explode(b,false));board=board.filter(b=>!matches.includes(b));const anchored=new Set();for(const b of board.filter(b=>b.r===0))for(const a of group(b))anchored.add(a);const falling=board.filter(b=>!anchored.has(b));falling.forEach(b=>explode(b,true));board=board.filter(b=>anchored.has(b));const gain=matches.length*100+falling.length*200+Math.max(0,combo-1)*100;score+=gain;announce(falling.length?'우르르! '+falling.length+' DROP  +'+gain:matches.length+' PANG!  +'+gain);beep(Math.min(1800,520+combo*80))}else combo=0;if(!board.length){finish(true);return}if(shots<=0||board.some(b=>pos(b.r,b.c).y+R>=490)){finish(false);return}const colors=available();current=colors.includes(next)?next:pick();next=pick();hud()}
 function snap(x,y){const occupied=new Set(board.map(b=>key(b.r,b.c))),candidates=[];for(let r=0;r<14;r++)for(let c=0;c<10;c++){if(!valid(r,c)||occupied.has(key(r,c)))continue;const p=pos(r,c),b={r,c};if(r!==0&&!neighbors(b).length)continue;candidates.push({r,c,d:Math.hypot(x-p.x,y-p.y)})}candidates.sort((a,b)=>a.d-b.d);return candidates[0]}
