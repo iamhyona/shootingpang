@@ -1,0 +1,392 @@
+/* ===== 공통 UI (PETRIS·스위치팡·팡팡·벽돌깨기 통일) ===== */
+.lcd-label{display:flex;align-items:center;gap:8px;padding:11px 10px 9px;white-space:nowrap;overflow:hidden;box-sizing:border-box;width:100%;flex-shrink:0}
+.lcd-label .ln{flex:1 1 0;min-width:0;overflow:hidden;display:flex;justify-content:flex-end;height:7px}
+.lcd-label .ln:last-child{transform:scaleX(-1)}
+.lcd-label .ln canvas{display:block;image-rendering:pixelated}
+.lcd-label>span{flex:0 0 auto}
+.lcd-label .copy{font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:1px;color:#b4b4cc;line-height:1}
+.phS{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:0 20px 16px;box-sizing:border-box;z-index:6;overflow:hidden}
+.phS-sp{min-height:0;flex-basis:0;flex-shrink:1}
+.phS>*:not(.phS-sp){flex-shrink:0}
+.phS-sp.a{flex:0 0 24%}.phS-sp.b{flex:0 0 8%}.phS-sp.c{flex:1 1 0}
+.phS-logo{height:100px;width:min(300px,82vw);display:flex;align-items:center;justify-content:center}
+.phS-logo svg{display:block;width:100%;height:auto;max-height:100%;filter:drop-shadow(0 0 5px rgba(255,255,255,.12))}
+.phS-show{height:36px;margin-top:14px;display:flex;gap:3px;align-items:center;justify-content:center}
+.phS-show img,.phS-show svg{width:34px;height:34px;display:block}
+.phS-btns{display:flex;flex-direction:column;gap:12px;align-items:center;width:100%}
+.phS .phS-b,.phT .phS-b{position:relative!important;width:232px!important;max-width:100%!important;height:52px!important;border:3px solid var(--phB,#5d5f70)!important;box-shadow:inset 0 0 0 3px var(--phBg,#131419),inset 0 0 0 5px var(--phR,#2a2b33)!important;background:var(--phBg,#131419)!important;color:var(--phT,#f2f2f7)!important;font:700 14px "Silkscreen",monospace!important;letter-spacing:.18em!important;cursor:pointer!important;border-radius:0!important;padding:0!important;margin:0!important;text-shadow:none!important;-webkit-tap-highlight-color:transparent!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.phS .phS-b::before,.phS .phS-b::after,.phT .phS-b::before,.phT .phS-b::after{content:none!important;display:none!important}
+.phS .phS-b:active,.phT .phS-b:active{transform:translateY(2px)!important}
+.phS .phS-b.gold{border-color:#d9a400!important;box-shadow:none!important;color:#f2b000!important}
+.phS-credit{color:var(--phC,#6c6d7c);font-size:11px;line-height:1.7;text-align:center}
+.phS-credit small{display:block;font:8px "Silkscreen",monospace;letter-spacing:.06em;opacity:.85;margin-bottom:6px}
+.phT{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(8,9,12,.88);padding:20px;box-sizing:border-box}
+.phT-c{width:min(320px,100%);background:#131419;border:3px solid #5d5f70;box-shadow:inset 0 0 0 3px #131419,inset 0 0 0 5px #2a2b33;padding:22px 18px 18px;color:#e9e9f0;text-align:center;box-sizing:border-box}
+.phT-h{font:700 15px "Silkscreen",monospace;letter-spacing:.18em;color:#f2b000;margin-bottom:6px}
+.phT-g{font-size:12px;color:#a8a9b8;margin-bottom:16px;line-height:1.6}
+.phT-r{display:grid;grid-template-columns:auto 1fr;gap:9px 10px;align-items:center;text-align:left;margin-bottom:18px}
+.phT-r kbd{justify-self:end;font-family:inherit;font-size:11px;border:1px solid #4a4b58;border-radius:4px;padding:3px 6px;color:#f2f2f7;white-space:nowrap;background:#0b0b0f}
+.phT-r span{font-size:12px;color:#c9c9d4;line-height:1.5}
+.phT-k{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:#a8a9b8;margin:0 0 14px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.phT-k input{appearance:none;-webkit-appearance:none;width:16px;height:16px;border:2px solid #6c6d7c;margin:0;display:grid;place-items:center;background:#0b0b0f;border-radius:0;cursor:pointer}
+.phT-k input:checked{border-color:#f2b000;background:#f2b000}
+.phT-k input:checked::after{content:"";width:4px;height:8px;border:solid #131419;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.phT .phS-b{margin:0 auto!important}
+/* 상단 탭 공통 (모드·랭킹): 밝은 회색 · 선택 시 톤온톤으로 은은하게 */
+html .vs .mt-btn,html .rk-tabs button,html .gmT .gmb{font:700 11px "Silkscreen",monospace!important;letter-spacing:.02em!important;color:#b9bdc3!important;background:transparent!important;border:2px solid rgba(200,204,210,.32)!important;box-shadow:none!important;text-shadow:none!important;border-radius:0!important;white-space:nowrap!important;overflow:hidden;padding-left:2px!important;padding-right:2px!important}
+html .vs .mt-btn.on,html .rk-tabs button.on,html .gmT .gmb.on{color:#f4f6f8!important;background:rgba(220,226,232,.13)!important;border-color:rgba(232,236,242,.65)!important}
+html .gmT .gmb small{color:inherit!important}
+/* 버튼 색 통일: 기본 버튼 초록 · 랭킹 밝은 회색 / 레벨 EASY 노랑 · NORMAL 하늘 · HARD 빨강 · MASTER 보라 */
+html .phS .phS-b,html .phT .phS-b{--phB:#10b870;--phT:#9ff0c6;--phBg:#0b1611;--phR:rgba(16,184,112,.16)}
+html .phS .phS-b.gold{border-color:#9a9fa6!important;color:#dfe2e6!important;box-shadow:none!important;background:transparent!important}
+html [data-m="easy"]{--lv:#f2b000;--lvT:#ffd84d;--lvA:rgba(242,176,0,.15)}
+html [data-m="normal"]{--lv:#00a8e0;--lvT:#7fd9ff;--lvA:rgba(0,168,224,.15)}
+html [data-m="hard"]{--lv:#e8284f;--lvT:#ff8aa0;--lvA:rgba(232,40,79,.15)}
+html [data-m="master"]{--lv:#8a3cf0;--lvT:#c9a6ff;--lvA:rgba(138,60,240,.18)}
+html .vs .mode-btn[data-m],html .ob.md[data-m],html #modeOv .ob[data-m],html #ovMode .btn[data-m]{border-color:var(--lv)!important;color:var(--lvT)!important;background:rgba(8,9,12,.55)!important;box-shadow:inset 0 0 0 2px rgba(8,9,12,.55),inset 0 0 0 4px var(--lvA)!important;text-shadow:none!important}
+html .vs .mode-btn[data-m]:hover,html .vs .mode-btn[data-m]:active,html .vs .mode-btn[data-m]:focus-visible,html .ob.md[data-m]:active,html #modeOv .ob[data-m]:active,html #ovMode .btn[data-m]:active{background:var(--lvA)!important;color:var(--lvT)!important;border-color:var(--lv)!important;box-shadow:inset 0 0 0 2px var(--lvA),inset 0 0 0 4px var(--lvA)!important}
+#modeOv,#ovMode{background:#0b0c10!important}
+html .vs .mode-btn[data-m] small,html .ob.md[data-m] small,html #modeOv .ob[data-m] small,html #ovMode .btn[data-m] small{color:inherit!important;opacity:.8!important}
+/* 모드·레벨 버튼 설명글 숨김, 높이 통일 */
+html .vs .mode-btn[data-m] small,html .ob.md[data-m] small,html #modeOv .ob[data-m] small,html #ovMode .btn[data-m] small,html .gmT .gmb small{display:none!important}
+html .vs .mode-btn[data-m],html .ob.md[data-m],html #modeOv .ob[data-m],html #ovMode .btn[data-m]{height:52px!important;min-height:52px!important;padding-top:0!important;padding-bottom:0!important;justify-content:center!important;box-sizing:border-box!important}
+html .gmT .gmb{min-height:40px!important}
+/* 상단 무지개 줄: 스크립트 전에도 바로 보이게 (그려지면 캔버스로 교체) */
+.lcd-label .ln:empty{background:linear-gradient(90deg,#e8284f 0 14.28%,#f26a0d 14.28% 28.57%,#f2b000 28.57% 42.85%,#10b870 42.85% 57.14%,#00a8e0 57.14% 71.42%,#2a5ef0 71.42% 85.71%,#8a3cf0 85.71% 100%);-webkit-mask-image:repeating-linear-gradient(90deg,#000 0 3px,transparent 3px 4px),repeating-linear-gradient(0deg,#000 0 3px,transparent 3px 4px);-webkit-mask-composite:source-in;mask-image:repeating-linear-gradient(90deg,#000 0 3px,transparent 3px 4px),repeating-linear-gradient(0deg,#000 0 3px,transparent 3px 4px);mask-composite:intersect}
+/* 온라인 대전 창 */
+.phV{position:fixed;inset:0;z-index:99998;display:flex;align-items:center;justify-content:center;background:rgba(8,9,12,.9);padding:20px;box-sizing:border-box}
+.phV[hidden]{display:none}
+.phV-c{position:relative;width:min(300px,100%);background:#131419;border:3px solid #5d5f70;box-shadow:inset 0 0 0 3px #131419,inset 0 0 0 5px #2a2b33;padding:26px 18px 20px;color:#e9e9f0;text-align:center;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;font-family:"Galmuri11",-apple-system,"Apple SD Gothic Neo",sans-serif}
+.phV-h{font:700 16px "Silkscreen",monospace;letter-spacing:.14em;color:#f2b000;margin-bottom:4px}
+.phV-win{color:#7dffb0}.phV-lose{color:#ff8aa0}.phV-draw{color:#c9ccd2}
+.phV-l{font:700 10px "Silkscreen",monospace;letter-spacing:.1em;color:#8f90a0;text-align:left}
+.phV-in{height:42px;border:2px solid #3a3b46;background:#0b0b0f;color:#f2f2f7;font-size:16px;padding:0 10px;border-radius:0;box-sizing:border-box;width:100%;text-align:center}
+.phV-in.code{font:800 20px ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;letter-spacing:.3em;text-transform:uppercase} /* 방 코드: 알파벳이 잘 구분되는 글꼴 */
+.phV-in.warn{border-color:#e8284f}
+.phV-b{height:46px;border:3px solid #10b870;background:#0b1611;color:#9ff0c6;font:700 13px "Silkscreen",monospace;letter-spacing:.14em;cursor:pointer;padding:0 12px;border-radius:0}
+.phV-b:active{transform:translateY(2px)}
+.phV-b.sub{border-color:#5d5f70;color:#c9ccd2;background:transparent}
+.phV-row{display:flex;gap:8px}.phV-row .phV-in{flex:1}.phV-row .phV-b{flex:0 0 90px}
+.phV-or{font:700 9px "Silkscreen",monospace;letter-spacing:.1em;color:#6c6d7c;margin-top:4px}
+.phV-m{font-size:13px;color:#b9bdc3;line-height:1.6;margin:0}
+.phV-code{font:800 40px ui-monospace,"SF Mono",Menlo,Consolas,"Roboto Mono",monospace;letter-spacing:.2em;color:#f4f6f8}
+.phV-count{font:700 64px "Silkscreen",monospace;color:#f4f6f8;padding:10px 0}
+.phV-dots{display:flex;gap:6px;justify-content:center}.phV-dots i{width:8px;height:8px;background:#f2b000;animation:phVd 1s infinite}.phV-dots i:nth-child(2){animation-delay:.2s}.phV-dots i:nth-child(3){animation-delay:.4s}
+@keyframes phVd{50%{opacity:.2}}
+.phV-sc{display:flex;gap:8px}.phV-sc div{flex:1;border:2px solid #2a2b33;padding:8px 4px;display:flex;flex-direction:column;gap:4px}.phV-sc small{font-size:11px;color:#8f90a0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.phV-sc b{font:700 16px "Silkscreen",monospace;color:#f4f6f8}
+.phV-x{position:absolute;top:6px;right:8px;background:none;border:0;color:#8f90a0;font-size:18px;cursor:pointer}
+.phVc{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 4px);opacity:.92;left:50%;transform:translateX(-50%);z-index:9000;background:rgba(19,20,25,.92);border:2px solid #8a3cf0;color:#e9e9f0;font:700 11px "Silkscreen",monospace;letter-spacing:.04em;padding:5px 10px;white-space:nowrap;pointer-events:none}
+.phVc[hidden]{display:none}.phVc b{color:#c9a6ff}.phVc span{color:#ffd84d;margin-left:4px}
+/* 모드 선택 통일 (팡야팡야 스타일): 각진 이중 테두리 + Silkscreen 넓은 자간 */
+html .vs .mode-btn[data-m],html .ob.md[data-m],html #modeOv .ob[data-m],html #ovMode .btn[data-m]{font-family:"Silkscreen",NeoDunggeunmo,ui-monospace,monospace!important;font-size:16px!important;font-weight:400!important;letter-spacing:.18em!important;border-width:3px!important;border-style:solid!important;border-radius:0!important;width:232px!important;max-width:100%!important;padding-left:6px!important;padding-right:6px!important;margin-left:auto!important;margin-right:auto!important}
+html .vs .mode-tabs{width:232px;max-width:100%;margin-left:auto;margin-right:auto;gap:8px}
+html .vs .mt-btn{font:700 11px "Silkscreen",monospace!important;letter-spacing:.02em!important;color:#b9bdc3!important;background:transparent!important;border:2px solid rgba(200,204,210,.32)!important;min-height:40px!important;padding:0 2px!important;overflow:hidden}
+html .vs .mt-btn.on{color:#f4f6f8!important;background:rgba(220,226,232,.13)!important;border-color:rgba(232,236,242,.65)!important}
+html .vs .vs-x,html #ovMode .x,html #modeX{font:400 22px "Silkscreen",monospace!important;color:#bfc3c9!important;background:none!important;border:0!important;width:auto!important;height:auto!important;padding:6px 14px!important;margin-top:4px!important;line-height:1!important}
+html .vs .vs-x svg{display:none!important}
+html .vs .vs-x::after{content:"\2715"}
+html .vs .mt-btn[data-t=time]{flex:1.7 1 0!important}
+html #modeBack{font-size:0!important;color:#bfc3c9!important;background:none!important;border:0!important;box-shadow:none!important;width:auto!important;min-height:0!important;height:auto!important;padding:6px 14px!important;margin-top:4px!important}
+html #modeBack::after{content:"\2715";font:400 22px "Silkscreen",monospace;line-height:1}
+/* ===== v2 디자인 통일 (2026-10-29) — 이 블록이 위 규칙보다 우선 ===== */
+/* 1) 상단 헤더: 픽셀 줄 없이 작은 회색 글자만 */
+html .lcd-label .ln{display:none!important}
+html .lcd-label{justify-content:center!important;padding:12px 10px 10px!important}
+html .lcd-label .copy{font:400 9px "Silkscreen",monospace!important;letter-spacing:2px!important;color:#8b8fa8!important}
+/* 2) 버튼: 300×52 · 모서리 12 · 테두리 2 · 배경 하나 · Silkscreen 13px 자간 .2em */
+html body .phS .phS-b,html body .phT .phS-b,html body .phDiff.phDiff.phDiff,html body .phBtn,html body .phV-b{--b:#10b870;--t:#9ff0c6;width:300px!important;max-width:100%!important;height:52px!important;min-height:0!important;box-sizing:border-box!important;border:2px solid var(--b)!important;border-radius:12px!important;background:#12142a!important;box-shadow:none!important;color:var(--t)!important;font:400 13px "Silkscreen",monospace!important;letter-spacing:.2em!important;padding:0 0 0 .2em!important;text-shadow:none!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;cursor:pointer!important;opacity:1;transition:background .15s,box-shadow .15s,transform .05s!important;-webkit-tap-highlight-color:transparent}
+html body .phS .phS-b.gold,html body .phS .phS-b.phS-how,html body .phBtn.sub,html body .phV-b.sub{--b:#3a3e66;--t:#dfe2ea}
+html body .phS-btns .phS-b.phS-how,html body .phBtn.ko{font:400 14px Galmuri11,"NeoDunggeunmo",monospace!important;letter-spacing:.06em!important;padding:0!important;width:300px!important;height:52px!important;margin-top:0!important}
+html body .phDiff.phDiff.phDiff{--b:var(--lvb);--t:var(--lvt)}
+html body .phBtn.half,html body .phS .phS-row2 .phS-b{width:auto!important;flex:1 1 0!important;min-width:0!important}
+html body .phS .phS-row2{display:flex!important;width:300px!important;max-width:100%!important;gap:12px!important}
+html body .phS-btns{gap:12px!important}
+html body .phS .phS-b::before,html body .phS .phS-b::after{content:none!important}
+@media (hover:hover){html body .phS .phS-b:hover,html body .phT .phS-b:hover,html body .phDiff.phDiff.phDiff:hover,html body .phBtn:hover,html body .phV-b:hover{background:color-mix(in srgb,var(--b) 16%,#12142a)!important;box-shadow:0 0 14px color-mix(in srgb,var(--b) 40%,transparent)!important}}
+html body .phS .phS-b:focus-visible,html body .phDiff.phDiff.phDiff:focus-visible,html body .phBtn:focus-visible{outline:none;background:color-mix(in srgb,var(--b) 16%,#12142a)!important;box-shadow:0 0 14px color-mix(in srgb,var(--b) 40%,transparent)!important}
+html body .phS .phS-b:active,html body .phT .phS-b:active,html body .phDiff.phDiff.phDiff:active,html body .phBtn:active,html body .phV-b:active{background:color-mix(in srgb,var(--b) 26%,#12142a)!important;transform:translateY(1px)!important}
+html body .phBtn:disabled,html body .phBtn.dis{opacity:.4!important;pointer-events:none}
+/* 3) 상단 토글: 칸 너비 균등 */
+html body .phSeg.phSeg.phSeg>button,html body .vs .phSeg .mt-btn[data-t]{flex:1 1 0!important;min-width:0!important;width:auto!important}
+html body .phSeg.phSeg.phSeg>button{font:400 10px "Silkscreen",monospace!important;letter-spacing:.06em!important}
+/* 4) 타이틀: 모든 게임 같은 점 크기 (ph.js가 svg 크기를 정함) */
+html body .phS-logo{width:100%!important;height:auto!important;min-height:104px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+html body .phS-logo svg{width:var(--lw,300px)!important;max-width:min(100%,86vw)!important;height:auto!important;max-height:none!important}
+/* 5) HUD: 라벨 위 · 숫자 아래 */
+.phBx{box-sizing:border-box;border:2px solid var(--phBd,#2c2f4a)!important;border-radius:12px!important;background:#0d0f1f!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:space-between!important;gap:0!important;padding:9px 6px!important;min-width:0}
+.phBx .phL{font:400 8px "Silkscreen",monospace!important;font-style:normal!important;letter-spacing:.08em!important;color:#8b8fa8!important;line-height:1!important;white-space:nowrap}
+.phBx .phN{font:400 22px "Jersey 15",sans-serif!important;color:#fff!important;line-height:1!important;letter-spacing:.02em!important;white-space:nowrap}
+.phIb{position:relative;box-sizing:border-box;border:2px solid var(--phBd,#2c2f4a)!important;border-radius:12px!important;background:#0d0f1f!important;color:#dfe2ea!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer;transition:background .15s,box-shadow .15s,opacity .15s}
+@media (hover:hover){.phIb:hover{background:#1b1e3a!important;box-shadow:0 0 12px rgba(154,163,232,.3)!important}}
+.phIb:active{transform:translateY(1px)}
+html body .phIb.off>*{opacity:.45}
+html body .phIb.off::after,html body #bgmB.off::after,html body #sfxB.off::after{content:""!important;position:absolute!important;left:50%!important;top:50%!important;width:62%!important;max-width:26px!important;height:3px!important;background:#ff8aa0!important;border-radius:2px!important;transform:translate(-50%,-50%) rotate(-45deg)!important;box-shadow:0 0 0 1.5px rgba(10,10,20,.85)!important;pointer-events:none!important;opacity:1!important}
+/* 6) 게임 중 팝업 문구: Silkscreen 대문자 · 어두운 외곽선 + 같은 색 글로우 · 의미별 색 */
+.phPop{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);z-index:30;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:6px;white-space:nowrap;text-align:center}
+.phPop b{--c:#ffd84d;font:700 20px "Silkscreen",monospace;letter-spacing:.1em;color:var(--c);text-transform:uppercase;text-shadow:2px 0 #08090f,-2px 0 #08090f,0 2px #08090f,0 -2px #08090f,2px 2px #08090f,-2px -2px #08090f,2px -2px #08090f,-2px 2px #08090f,0 0 14px color-mix(in srgb,var(--c) 55%,transparent)}
+.phPop span{--c:#ffd84d;font:700 11px "Silkscreen",monospace;letter-spacing:.25em;color:var(--c);text-shadow:1px 1px #08090f,-1px -1px #08090f,1px -1px #08090f,-1px 1px #08090f}
+.phPop span.n{font:400 20px "Jersey 15",sans-serif;letter-spacing:.02em}
+.phPop span.ko{font:400 12px Galmuri11,"NeoDunggeunmo",monospace;letter-spacing:.04em}
+.phPop.d1 b{font-size:28px}.phPop.d3 b{font-size:14px}
+.phPop.gold b,.phPop.gold span{--c:#ffd84d}.phPop.item b,.phPop.item span{--c:#ff6ec7}.phPop.stage b,.phPop.stage span{--c:#7fd9ff}.phPop.atk b,.phPop.atk span{--c:#c9a6ff}.phPop.warn b,.phPop.warn span{--c:#ff8aa0}.phPop.white b,.phPop.white span{--c:#ffffff}
+.phPop.go{animation:phPopA 1.25s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes phPopA{0%{transform:translate(-50%,-50%) scale(.6);opacity:0}10%{transform:translate(-50%,-50%) scale(1.08);opacity:1}18%{transform:translate(-50%,-50%) scale(1)}72%{transform:translate(-50%,-50%);opacity:1}100%{transform:translate(-50%,calc(-50% - 16px));opacity:0}}
+/* 7) 소리 설정 (볼륨) */
+.phVol{display:flex;flex-direction:column;gap:12px;width:300px;max-width:100%;box-sizing:border-box;margin:4px auto 0;padding:14px 16px;border:2px solid #23253a;border-radius:12px;background:#0b0c1a}
+.phVol label{display:grid;grid-template-columns:44px 1fr 32px;gap:12px;align-items:center;cursor:pointer}
+.phVol label>i{font:400 10px "Silkscreen",monospace;font-style:normal;letter-spacing:.15em;color:#dfe2ea}
+.phVol label>b{font:400 18px "Jersey 15",sans-serif;color:#fff;text-align:right}
+.phVol input[type=range]{width:100%;accent-color:#f2b000;margin:0;height:20px;cursor:pointer}
+.phVol.off-bgm label.bgm,.phVol.off-sfx label.sfx{opacity:.55}
+/* 8) 게임 시작 화면 상징 모션 */
+@keyframes phBob{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
+@keyframes phBreathe{0%,100%{transform:scale(1,1)}50%{transform:scale(1.07,.93)}}
+@keyframes phFloat{0%,100%{transform:translateY(-4px) rotate(-4deg)}50%{transform:translateY(4px) rotate(4deg)}}
+@keyframes phSway{0%,100%{transform:translateX(-2px)}50%{transform:translateX(2px)}}
+.phS-show.mv-bob>*{animation:phBob 2.2s steps(6) infinite}
+.phS-show.mv-bob>*:nth-child(even){animation-delay:-1.1s}
+.phS-show.mv-marble>*{width:30px!important;height:30px!important;object-fit:contain;margin:0 1px!important;animation:phBreathe 2.4s steps(6) infinite;transform-origin:50% 100%}
+.phS-show.mv-marble>*:nth-child(2){animation-delay:-.4s}.phS-show.mv-marble>*:nth-child(3){animation-delay:-.8s}.phS-show.mv-marble>*:nth-child(4){animation-delay:-1.2s}.phS-show.mv-marble>*:nth-child(5){animation-delay:-1.6s}.phS-show.mv-marble>*:nth-child(6){animation-delay:-2s}
+.phS-show.mv-twin>canvas{animation:phSway 2s steps(4) infinite}
+.phS-show.mv-twin>canvas.ship{animation:phFloat 2.6s steps(8) infinite;margin:0 4px}
+.phS-show.mv-twin>canvas.ship+canvas.ship{animation-delay:-1.3s}
+.phS-show.mv-swap>img{transition:transform .5s cubic-bezier(.5,0,.3,1)}
+.phS-show.mv-ring{position:relative;display:block!important;width:84px!important;height:84px!important}
+.phS-show.mv-ring>img{position:absolute;left:0;top:0;width:26px!important;height:26px!important;transition:transform .45s cubic-bezier(.5,0,.3,1)}
+.phS-show.mv-bricks{position:relative}
+.phS-show.mv-bricks>i.ball{position:absolute;width:7px;height:7px;border-radius:50%;background:#fff;box-shadow:0 0 6px #fff9;left:0;top:0;pointer-events:none}
+.phS-show.mv-bricks>svg.hit{animation:phHit .3s steps(2)}
+@keyframes phHit{50%{transform:translateY(3px);filter:brightness(1.6)}}
+/* 9) 보정 (2026-10-29 2차) */
+html body .phS-show{height:auto!important;min-height:84px!important;margin-top:10px!important}
+.phS-show.mv-swap>img{width:34px!important;height:34px!important}
+.phS-show.mv-bob>svg,.phS-show.mv-bob>img{width:26px!important;height:26px!important}
+.phS-show.hg i{font-size:14px!important}
+/* 게임 중 난이도: 상단 칸·아이콘 테두리도 난이도 색(연하게) · 아래에 난이도 이름 */
+html body[data-phlv] .phBx,html body[data-phlv] .phIb{--phBd:color-mix(in srgb,var(--phlvb) 30%,#1b1d30)}
+.phLvName{font:400 9px "Silkscreen",monospace!important;letter-spacing:2px!important;color:var(--phlvt,#8b8fa8);text-align:center;opacity:.8;padding:6px 0 0 .3em;pointer-events:none}
+.phLvName:empty{display:none}
+/* 설정 창 (모든 게임 공통) */
+.phSet{position:fixed;inset:0;z-index:99997;display:flex;align-items:center;justify-content:center;background:rgba(8,9,12,.88);padding:16px;box-sizing:border-box}
+.phSet-c{width:min(340px,100%);max-height:100%;overflow:auto;background:#0b0c1a;border:2px solid #23253a;border-radius:18px;padding:20px 18px 18px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;color:#e9eaf5;font-family:Galmuri11,"NeoDunggeunmo",sans-serif}
+.phSet-h{text-align:center;font:400 20px "Silkscreen",monospace;letter-spacing:.15em;color:#fff;margin-bottom:6px}
+.phSet-sec{font:400 9px "Silkscreen",monospace;letter-spacing:.2em;color:#8b8fa8;margin-top:6px}
+.phSet-r{display:flex;flex-direction:column;gap:6px;padding:10px 12px;border-radius:12px;background:#12142a;border:2px solid #23253a}
+.phSet-l{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px}
+.phSet-l small{font-size:11px;color:#8b8fa8}
+.phSet-o{display:flex;gap:4px;flex-shrink:0}
+.phSet-o button{min-width:46px;height:30px;padding:0 8px;border-radius:8px;border:2px solid #3a3e66;background:#0d0f1f;color:#8b8fa8;font:400 12px Galmuri11,"NeoDunggeunmo",sans-serif;cursor:pointer}
+.phSet-o button.on{border-color:#10b870;background:rgba(16,184,112,.16);color:#9ff0c6}
+.phSet-o button.tg{font:400 10px "Silkscreen",monospace;letter-spacing:.06em;min-width:54px}
+.phSet-v{display:grid;grid-template-columns:1fr 32px;gap:10px;align-items:center}
+.phSet-v input{width:100%;accent-color:#f2b000;margin:0;height:20px}
+.phSet-v b{font:400 18px "Jersey 15",sans-serif;text-align:right;color:#fff}
+.phSet-v.dim{opacity:.4}
+.phSet-btns{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.phSet-row{display:flex;gap:12px}
+.phSet-row .phBtn{width:auto!important;flex:1 1 0!important}
+.phSet .phBtn{width:100%!important}
+html body .phS-sp.a{flex:0 0 12%!important}html body .phS-sp.b{flex:0 0 5%!important}
+/* 10) 예전 ID 규칙(#ovMode/#modeOv/.vs [data-m])보다 v2 난이도 버튼이 우선 */
+html body :is(#ovMode,#modeOv,.vs,#modeOv2,body) .phDiff.phDiff.phDiff{--b:var(--lvb);--t:var(--lvt);width:300px!important;max-width:100%!important;height:52px!important;min-height:0!important;box-sizing:border-box!important;border:2px solid var(--b)!important;border-radius:12px!important;background:#12142a!important;box-shadow:none!important;color:var(--t)!important;font:400 13px "Silkscreen",monospace!important;letter-spacing:.2em!important;padding:0 0 0 .2em!important;margin-left:auto!important;margin-right:auto!important;text-shadow:none!important}
+@media (hover:hover){html body :is(#ovMode,#modeOv,.vs,#modeOv2,body) .phDiff.phDiff.phDiff:hover{background:color-mix(in srgb,var(--b) 16%,#12142a)!important;box-shadow:0 0 14px color-mix(in srgb,var(--b) 40%,transparent)!important}}
+html body :is(#ovMode,#modeOv,.vs,#modeOv2,body) .phDiff.phDiff.phDiff:focus-visible,html body :is(#ovMode,#modeOv,.vs,#modeOv2,body) .phDiff.phDiff.phDiff.sel{background:color-mix(in srgb,var(--b) 16%,#12142a)!important;box-shadow:0 0 14px color-mix(in srgb,var(--b) 40%,transparent)!important;outline:none}
+html body :is(#ovMode,#modeOv,.vs,#modeOv2,body) .phDiff.phDiff.phDiff:active{background:color-mix(in srgb,var(--b) 26%,#12142a)!important;transform:translateY(1px)!important}
+/* 11) 한글 글꼴(갈무리11)로 통일: 시작 화면 안내 문구 · 랭킹 닉네임 · 랭킹 점수 — 닉네임은 점수보다 작게 */
+html body .phS-credit{font:400 10px/1.7 Galmuri11,"NeoDunggeunmo",sans-serif!important;letter-spacing:0!important;color:rgba(200,204,220,.45)!important}
+html body .rank li span,html body .list .nm,html body .rk .nm,html body .rank .nm,html body #rList .nm{font-family:Galmuri11,sans-serif!important;font-size:12px!important;letter-spacing:0!important}
+html body .list .s,html body .list .t,html body .rk li b,html body .rank li em,html body #rList .s{font-family:Galmuri11,sans-serif!important;font-weight:400!important;font-size:14px!important;letter-spacing:0!important}
+/* 12) 모드 선택 · 랭킹 화면 위계: 제목은 작게·위로, 박스 묶음과 ✕는 아래로 떨어뜨림 */
+html body .phOvH{font:700 22px/1.1 "Silkscreen",monospace!important;letter-spacing:.14em!important;color:#fff!important;text-align:center!important;margin:0 0 30px!important;white-space:nowrap;flex:0 0 auto}
+html body .phOvH.phOvRk{font-size:17px!important;color:#c9cbe0!important;margin-bottom:24px!important}
+html body .phOvHid{display:none!important}
+html body .phOvX{margin-top:30px!important;flex:0 0 auto}
+html body button.phOvX:not(.vs-x){background:none!important;border:0!important;box-shadow:none!important;color:#c9cbe0!important;font:400 22px/1 sans-serif!important;width:auto!important;height:auto!important;min-height:0!important;padding:6px 14px!important;letter-spacing:0!important}
+html body #rankOv.phOvP,html body #ovRank.phOvP{background:rgba(9,10,16,.97)!important;backdrop-filter:none!important}
+/* 13) 시작 화면 버튼 줄: RANKING 한 줄, 아래 HOW TO PLAY | SETTINGS 반반 (반쪽 버튼은 글자 11px) */
+html body .phS .phS-btns .phS-b.phS-rkW{width:300px!important;max-width:100%!important}
+html body .phS .phS-row2 .phS-b,html body .phS .phS-row2 .phS-b.phS-how{font:400 11px "Silkscreen",monospace!important;letter-spacing:.2em!important;width:auto!important;flex:1 1 0!important;min-width:0!important;white-space:nowrap!important}
+/* 14) HOW TO PLAY 팝업: 제목 · 설명 · 조작법 · 버튼 사이 간격과 안쪽 여백을 넓힘, 조작법은 키 위 / 설명 아래로 가운데 정렬 */
+html body .phT-c{width:min(340px,100%)!important;padding:34px 26px 26px!important}
+html body .phT-h{margin-bottom:16px!important}
+html body .phT-g{margin-bottom:30px!important;line-height:1.75!important;word-break:keep-all!important}
+html body .phT-r{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;gap:0!important;margin-bottom:32px!important}
+html body .phT-r kbd{justify-self:auto!important;margin-top:18px!important;padding:4px 8px!important}
+html body .phT-r kbd:first-child{margin-top:0!important}
+html body .phT-r span{margin-top:7px!important;word-break:keep-all!important}
+html body .phT-k{margin:-8px 0 22px!important}
+html body .phT-c{max-height:100%!important;overflow-y:auto!important}
+/* 15) 잠시 멈춤 화면 통일: 제목은 게임 선택 화면 제목과 같은 글꼴(빛 번짐 없음), 배경 농도 통일, 버튼 RESUME·RESTART·MAIN MENU */
+html body #pauseOv,html body #ovPause,html body #overlay.paused{background:rgba(8,9,15,.9)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body #pauseOv>.paused,html body #ovPause>.big,html body #ovPause>.ttl,html body .phPauseH{font:700 22px/1.1 "Silkscreen",monospace!important;letter-spacing:.14em!important;color:#fff!important;text-shadow:0 0 8px rgba(200,214,255,.8),0 0 22px rgba(150,170,255,.45)!important;filter:none!important;animation:none!important;text-align:center!important;margin:0 0 30px!important;padding:0!important}
+html body #overlay.paused #btn-set2{display:none!important}
+/* 16) 화면 제목(게임 선택·랭킹·잠시 멈춤) 모두 같은 은은한 빛 번짐 */
+html body .phOvH,html body .phOvH.phOvRk{color:#fff!important;text-shadow:0 0 8px rgba(200,214,255,.8),0 0 22px rgba(150,170,255,.45)!important}
+/* 17) 잠시 멈춤 버튼: RESTART | MAIN MENU 반반, 아래 ✕ = 계속하기 (RESUME 버튼은 숨김) */
+html body #pauseOv #resumeB,html body #ovPause #bResume,html body #overlay.paused #overlay-btn{display:none!important}
+html body #pauseOv .phPRow,html body #ovPause .phPRow,html body #overlay.paused .phPRow{display:flex!important;gap:12px!important;width:300px!important;max-width:100%!important;margin:0 auto!important}
+html body .phPRow .phBtn{width:auto!important;flex:1 1 0!important;min-width:0!important;margin:0!important;white-space:nowrap!important}
+html body #overlay:not(.paused) .phPRow{display:contents!important}
+html body #overlay:not(.paused) .phPX{display:none!important}
+/* 18) 설정 창: SOUND·PLAY 글자 없앰, 맨 아래 CLOSE → ✕ */
+html body .phSet-gap{height:8px}
+html body .phSet-c{padding-top:22px!important}
+html body .phSetX{align-self:center;margin:14px auto 0!important;background:none!important;border:0!important;box-shadow:none!important;color:#c9cbe0!important;font:400 22px/1 sans-serif!important;padding:6px 14px!important;cursor:pointer;display:block}
+html body .phSetX:hover{color:#fff!important}
+/* 19) 게임 오버 화면 통일 */
+html body #overOv.phGoOv:not([hidden]),html body #ovOver.phGoOv.show,html body #overlay.phGoOv.over{display:grid!important;grid-template-columns:repeat(2,minmax(0,144px))!important;justify-content:center!important;align-content:center!important;gap:12px!important;background:rgba(8,9,15,.92)!important;backdrop-filter:none!important;overflow-y:auto!important}
+html body .phGoOv>*{grid-column:1/-1;min-width:0}
+html body .phGoOv .phGoC{display:contents!important}
+html body .phGoOv .phGo{order:1!important;display:flex;flex-direction:column;align-items:center;margin-bottom:6px}
+html body .phGoOv .phGoF,html body .phGoOv #overlay-msg{order:3!important;grid-column:1/-1!important;margin:0!important}
+html body .phGoOv .phGoRank{order:4!important;grid-column:1/-1!important}
+html body .phGoOv .phGoRetry{order:5!important;grid-column:1/-1!important}
+html body .phGoOv .phGoMenu,html body .phGoOv .phGoAll{order:6!important;grid-column:auto!important;font-size:11px!important}
+html body .phGoOv .phGoRank,html body .phGoOv .phGoRetry,html body .phGoOv .phGoMenu,html body .phGoOv .phGoAll{width:auto!important;margin:0!important;white-space:nowrap}
+html body .phGoOv .phGoRank{--b:#f2b000!important;--t:#ffd84d!important;border-color:#f2b000!important;color:#ffd84d!important}
+html body .phGoOv #overlay-msg>svg,html body .phGoOv #overlay-msg .go-score,html body .phGoOv>.go,html body .phGoOv>#overTitle,html body .phGoOv>.st,html body .phGoOv>.rk,html body .phGoOv>#oSub,html body .phGoOv>#oBig,html body .phGoOv>#oStats,html body .phGoOv>#overScore,html body .phGoOv>#overInfo,html body .phGoOv #oMsg,html body .phGoOv #overInfo2,html body .phGoOv #btn-set2,html body .phGoOv #btn-restart2,html body .phGoOv .phPX{display:none!important}
+html body .phGoT{width:230px;height:auto;display:block;filter:drop-shadow(0 0 4px rgba(244,255,240,.5)) drop-shadow(0 0 12px rgba(200,214,255,.28))}
+html body .phGoN{display:flex;flex-direction:column;align-items:center;gap:6px;margin:24px 0 8px}
+html body .phGoN i{font:400 9px/1 "Silkscreen",monospace;letter-spacing:.16em;color:#8b8fa8;font-style:normal}
+html body .phGoN b{font:400 56px/1 "Jersey 15",sans-serif;color:#fff;text-shadow:0 0 8px rgba(200,214,255,.8),0 0 22px rgba(150,170,255,.45)}
+html body .phGoQ{font:400 12px/1.6 Galmuri11,sans-serif;color:#c9cbe0;text-align:center;margin:0 0 16px;word-break:keep-all;max-width:300px}
+html body .phGoQ:empty{display:none}
+html body .phGoSt{display:flex;gap:10px;width:300px;max-width:100%;margin-bottom:4px}
+html body .phGoSt[hidden]{display:none}
+html body .phGoSt div{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:10px;padding:12px 4px 11px;border:2px solid #2c2f4a;border-radius:12px;background:#0d0f1f}
+html body .phGoSt i{font:400 8px/1 "Silkscreen",monospace;letter-spacing:.1em;color:#8b8fa8;font-style:normal;white-space:nowrap}
+html body .phGoSt b{font:400 24px/1 "Jersey 15",sans-serif;color:#fff;font-weight:400}
+html body .phGoOv .phGoF{display:flex!important;gap:10px!important}
+html body .phGoOv .phGoF input{flex:1 1 0!important;min-width:0!important;height:46px!important;box-sizing:border-box!important;border:2px solid #3a3e66!important;border-radius:12px!important;background:#0a0b16!important;color:#fff!important;font:400 14px Galmuri11,sans-serif!important;padding:0 14px!important;margin:0!important}
+html body .phGoOv .phGoF button{flex:0 0 76px!important;height:46px!important;box-sizing:border-box!important;border:2px solid #3a3e66!important;border-radius:12px!important;background:#12142a!important;color:#dfe2ea!important;font:400 11px "Silkscreen",monospace!important;letter-spacing:.14em!important;padding:0!important;margin:0!important;box-shadow:none!important;opacity:1!important}
+/* 랭킹 1위 축하 화면 */
+html body .phGo1 .phGoN b{color:#ffd84d;text-shadow:0 0 8px rgba(255,216,77,.8),0 0 24px rgba(242,176,0,.5)}
+html body .phWin{position:absolute;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 40%,rgba(80,60,0,.55),rgba(8,9,15,.97) 70%);grid-column:auto!important}
+html body .phWin canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+html body .phWin-c{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:20px;animation:phWinIn .5s steps(6) both}
+html body .phWinT{width:150px;height:auto;filter:drop-shadow(0 0 6px rgba(255,216,77,.8)) drop-shadow(0 0 20px rgba(242,176,0,.5));animation:phWinP 1.6s ease-in-out infinite}
+html body .phWin-k{font:400 20px/1.3 Galmuri11,sans-serif;color:#ffd84d;margin-top:8px}
+html body .phWin-n{display:flex;flex-direction:column;align-items:center;gap:6px;margin:6px 0}
+html body .phWin-n i{font:400 9px/1 "Silkscreen",monospace;letter-spacing:.16em;color:#c9b77a;font-style:normal}
+html body .phWin-n b{font:400 52px/1 "Jersey 15",sans-serif;color:#fff;text-shadow:0 0 10px rgba(255,216,77,.8),0 0 26px rgba(242,176,0,.5)}
+html body .phWin-s{font:400 12px/1.6 Galmuri11,sans-serif;color:#d8d2b8}
+html body .phWin .phWin-b{--b:#f2b000!important;--t:#ffd84d!important;border-color:#f2b000!important;color:#ffd84d!important;font:400 14px Galmuri11,sans-serif!important;letter-spacing:.06em!important;margin-top:10px!important}
+@keyframes phWinIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+@keyframes phWinP{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){html body .phWinT,html body .phWin-c{animation:none}}
+html body .phS .phS-btns .phS-b.phS-all{width:300px!important;max-width:100%!important}
+html body .phWin{background:radial-gradient(ellipse at 50% 40%,rgba(90,66,0,.6),rgba(7,8,13,0) 70%),#07080d!important}
+/* 21) 랭킹 목록: 페트리스 방식으로 통일 (상자 없이 점선 줄 · 순위 숫자 픽셀 글씨 · 1~3위 금은동) */
+html body #rankOv .rk,html body #ovRank .list,html body #ovRank #rList{width:300px!important;max-width:100%!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;max-height:min(52vh,460px)!important;overflow-y:auto!important;padding:0!important;margin:0 auto!important}
+html body #rankOv .rk ol{margin:0!important;padding:0!important}
+html body #rankOv .rk li,html body #ovRank .list>div{display:flex!important;align-items:center!important;gap:10px!important;padding:9px 6px!important;min-height:0!important;height:auto!important;border:0!important;border-bottom:1px dashed rgba(200,205,225,.16)!important;background:none!important;border-radius:0!important}
+html body #rankOv .rk li>em,html body #ovRank .list .r{font:700 13px/1 "Silkscreen",monospace!important;width:24px!important;flex:0 0 24px!important;text-align:left!important;color:#8b8fa8!important;font-style:normal!important}
+html body #rankOv .rk li:nth-child(1)>em,html body #ovRank .list>div:nth-child(1) .r{color:#f2b000!important}
+html body #rankOv .rk li:nth-child(2)>em,html body #ovRank .list>div:nth-child(2) .r{color:#cfd8dc!important}
+html body #rankOv .rk li:nth-child(3)>em,html body #ovRank .list>div:nth-child(3) .r{color:#f26a0d!important}
+html body #rankOv .rk li .nm,html body #ovRank .list .nm{color:#e9eaf5!important}
+html body #rankOv .rk li>span.nm,html body #ovRank .list>div>span:nth-of-type(2){flex:1 1 auto!important;min-width:0!important;display:flex!important;align-items:center!important;gap:6px!important;overflow:hidden!important;white-space:nowrap!important}
+html body #rankOv .rk li>b,html body #ovRank .list .s{margin-left:auto!important;color:#fff!important;text-align:right!important}
+html body #rankOv .rk li small,html body #ovRank .list .m{font-size:10px!important;color:#7d8199!important;white-space:nowrap!important}
+html body #ovRank .list .em,html body #ovRank #rList .em{display:block!important;border:0!important;background:none!important;color:#8b8fa8!important;font:400 13px/1.6 Galmuri11,sans-serif!important;padding:28px 0!important;text-align:center!important}
+html body #rankOv .rk li>span.nm,html body #ovRank .list>div>span:nth-of-type(2){justify-content:flex-start!important;text-align:left!important}
+html body #rankOv.phOvP,html body #ovRank.phOvP{background:#090a10!important}
+/* 1위 축하 문구: 영어 */
+html body .phWin-k{font:700 15px/1.2 "Silkscreen",monospace!important;letter-spacing:.12em!important;color:#ffd84d!important;text-shadow:0 0 8px rgba(255,216,77,.75),0 0 20px rgba(242,176,0,.45);margin-top:12px!important;white-space:nowrap}
+html body .phWin-n i{font:400 10px/1 "Silkscreen",monospace!important;letter-spacing:.16em!important;color:#1a1300!important;background:#f2b000;border-radius:6px;padding:5px 9px 4px;font-style:normal}
+html body .phGo1 .phGoT{width:170px;filter:drop-shadow(0 0 5px rgba(255,216,77,.75)) drop-shadow(0 0 16px rgba(242,176,0,.45))}
+html body .phWinT{width:120px!important}
+html body .phWinT{width:150px!important}
+html body .phGo1 .phGoQ{color:#ffd84d}
+html body #ovRank .list .s,html body #rankOv .rk li>b{white-space:nowrap!important}
+/* 22) 게임 오버 정리: 이름칸·OK를 버튼과 같은 너비·높이로, 버튼 농도 통일, 0점이면 이름칸 숨김 · 잠시 멈춤/설정에 ALL GAMES */
+html body .phGoOv .phGoF{width:100%!important;max-width:none!important;justify-self:stretch!important;opacity:1!important;filter:none!important;padding:0!important;border:0!important;background:none!important}
+html body .phGoOv .phGoF input{height:52px!important;opacity:1!important}
+html body .phGoOv .phGoF button{flex:0 0 96px!important;height:52px!important;opacity:1!important}
+html body .phGoOv.phGoNoF .phGoF,html body .phGoOv.phGoNoF #overlay-msg{display:none!important}
+html body .phGoOv .phGoRank,html body .phGoOv .phGoRetry,html body .phGoOv .phGoMenu,html body .phGoOv .phGoAll{height:52px!important;opacity:1!important;filter:none!important}
+html body .phPAll{width:300px!important;max-width:100%!important;margin:0 auto!important;font-size:11px!important}
+html body #overlay:not(.paused) .phPAll{display:none!important}
+html body .phSetAll{font-size:11px!important}
+html body .phWinT{width:120px!important;margin-bottom:10px}
+html body .phGoOv.phGoOv .phGoMenu,html body .phGoOv.phGoOv .phGoAll{font-size:11px!important;letter-spacing:.2em!important}html body .phGoOv.phGoOv .phGoRank,html body .phGoOv.phGoOv .phGoRetry{font-size:13px!important;letter-spacing:.2em!important}
+html body .phS .phS-row2 .phS-noSet{display:none!important}
+/* 23) 잠시 멈춤: 세로 한 줄씩 RESTART · RANKING · MAIN MENU · ALL GAMES, 아래 ✕ */
+html body #pauseOv .phPRow,html body #ovPause .phPRow,html body #overlay.paused .phPRow{flex-direction:column!important}
+html body .phPRow .phBtn{width:100%!important;flex:0 0 auto!important;height:52px!important;font-size:13px!important}
+html body #overlay:not(.paused) .phPRank{display:none!important}
+html body.phRkTop #rankOv,html body.phRkTop #ovRank,html body.phRkTop #vs{z-index:80!important}
+/* 24) 버튼 사이 간격 통일: 가로·세로 모두 12px (시작 · 게임 선택 · 잠시 멈춤 · 설정 · 게임 오버) */
+html body .phS-btns,html body .phS .phS-row2,html body #pauseOv,html body #ovPause,html body .phPRow,html body .phSet-btns,html body .phSet-row,html body .mode-pick,html body .mBtns{gap:12px!important;row-gap:12px!important;column-gap:12px!important}
+html body .phS-btns>*,html body .phPRow>*,html body .phSet-btns>*,html body .mode-pick>*,html body .mBtns>*{margin-top:0!important;margin-bottom:0!important}
+html body #modeOv,html body #ovMode{gap:12px!important}
+html body #modeOv>.phDiff,html body #ovMode>.phDiff,html body .mode-pick>.phDiff,html body .mBtns>.phDiff{margin:0!important}
+/* 25) 설정 창: 배경음·효과음 한 줄(이름 · 볼륨 바 · 끄기/켜기), 버튼 작게, 버튼 글자 크기는 너비 기준(반쪽 11px · 한 줄 13px) */
+html body .phSet-one{display:flex!important;align-items:center!important;gap:10px!important;flex-direction:row!important}
+html body .phSet-one .phSet-n{flex:0 0 auto;min-width:40px;font-size:12px}
+html body .phSet-one .phSet-v{flex:1 1 auto!important;min-width:0!important;margin:0!important;display:flex!important;align-items:center!important;gap:6px!important}
+html body .phSet-one .phSet-v input{flex:1 1 auto!important;min-width:0!important;width:auto!important}
+html body .phSet-one .phSet-v b{flex:0 0 22px;font-size:13px!important;text-align:right}
+html body .phSet-o{gap:4px!important}
+html body .phSet-o button{min-width:38px!important;height:26px!important;padding:0 6px!important;font:400 11px Galmuri11,"NeoDunggeunmo",sans-serif!important;border-radius:7px!important;letter-spacing:0!important}
+html body .phSet-row .phBtn{font-size:11px!important}
+html body .phSet-btns>.phBtn{font-size:13px!important}
+/* 26) 설정: 설정 항목은 상자 하나, 버튼은 상자 밖 아래 (MAIN MENU | ALL GAMES → RESTART → ✕) */
+html body .phSet-w{width:min(340px,100%);max-height:100%;overflow:auto;display:flex;flex-direction:column;gap:12px}
+html body .phSet-w>.phSet-c{width:100%!important;max-height:none!important;overflow:visible!important}
+html body .phSet-w>.phSet-btns{margin:0!important;display:flex;flex-direction:column;gap:12px}
+html body .phSet-w .phSet-row{display:flex;gap:12px}
+html body .phSet-w .phSet-row .phBtn{flex:1 1 0;width:auto!important;min-width:0;font-size:11px!important}
+html body .phSet-w .phSetRst{width:100%!important;font-size:13px!important}
+html body .phSet-w .phSetX{margin-top:2px!important}
+/* 27) 시작 화면: RANKING | ALL GAMES 반반, HOW TO PLAY 밑줄 글자 링크 (버튼들과 간격 넓게) */
+html body .phS .phS-row2 .phS-b.phS-all{width:auto!important;flex:1 1 0!important;min-width:0!important;font-size:11px!important}
+html body .phS .phS-howL{all:unset;box-sizing:border-box;display:block;margin:28px auto 0;padding:6px 12px;font:400 10px/1 "Silkscreen",monospace;letter-spacing:.16em;color:#8b8fa8;text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px;cursor:pointer;flex-shrink:0;text-align:center}
+html body .phS .phS-howL:hover{color:#dfe2ea}
+html body .phS .phS-howL:focus-visible{outline:2px solid #3a3e66;outline-offset:2px;border-radius:4px}
+/* 28) 사운드 아이콘 하나: 예전 배경음·효과음 버튼 숨김, 둘 다 꺼지면 사선 */
+html body .phSndOld{display:none!important}
+html body .phSndB{position:relative}
+html body .phSndB.off::after{content:"";position:absolute;left:50%;top:50%;width:64%;max-width:26px;height:3px;background:#ff5a6e;border-radius:2px;transform:translate(-50%,-50%) rotate(-45deg);box-shadow:0 0 0 1.5px rgba(10,10,20,.85);pointer-events:none}
+html body .phSndB svg{width:22px;height:20px;display:block;margin:auto}
+/* 29) 잠시 멈춤 버튼 순서: RANKING → MAIN MENU | ALL GAMES → RESTART → ✕ */
+html body #pauseOv .phPRow,html body #ovPause .phPRow,html body #overlay.paused .phPRow{display:grid!important;grid-template-columns:1fr 1fr!important;gap:12px!important}
+html body .phPRow .phPRank{order:1;grid-column:1/-1}
+html body .phPRow .phPMenu{order:2;font-size:11px!important}
+html body .phPRow .phPAll{order:3;font-size:11px!important;width:auto!important;margin:0!important}
+html body .phPRow .phPRst{order:4;grid-column:1/-1}
+html body .phPRow>.phBtn.phBtn.phBtn{width:auto!important;min-width:0!important;max-width:none!important;margin:0!important}
+html body #overlay .phPRow>button.phBtn,html body #pauseOv .phPRow>button.phBtn,html body #ovPause .phPRow>button.phBtn{width:auto!important;max-width:none!important}
+/* 30) 잠시 멈춤: RANKING → RESTART(초록 테두리) → MAIN MENU | ALL GAMES */
+html body .phPRow .phPRst{order:2!important}
+html body .phPRow .phPMenu,html body .phPRow .phPAll{order:3!important}
+html body .phPRow>.phPRst.phBtn{--b:#10b870!important;--t:#9ff0c6!important;border-color:#10b870!important;color:#9ff0c6!important}
+/* 31 (2026-10-30): 시작 화면 — 로고~HOW TO PLAY 덩어리를 하단 글 위 영역의 세로 가운데로 */
+html body .phS-sp.a{flex:1 1 0!important;min-height:12px}
+html body .phS-sp.c{flex:1 1 0!important;min-height:12px}
+
+/* 32 (2026-10-31): 잠시 멈춤 순서 — RESUME(초록) → RESTART → RANKING → MAIN MENU | ALL GAMES */
+html body .phPRow .phPRes{order:1!important;grid-column:1/-1!important}
+html body .phPRow .phPRst{order:2!important;grid-column:1/-1!important}
+html body .phPRow .phPRank{order:3!important;grid-column:1/-1!important}
+html body .phPRow .phPMenu,html body .phPRow .phPAll{order:4!important}
+html body .phPRow>.phPRes.phBtn{--b:#10b870!important;--t:#9ff0c6!important;border-color:#10b870!important;color:#9ff0c6!important;height:52px!important;font-size:13px!important;letter-spacing:.2em!important}
+html body .phPRow>.phPRst.phBtn{--b:#3a3e66!important;--t:#dfe2ea!important;border-color:#3a3e66!important;color:#dfe2ea!important}
+html body #overlay:not(.paused) .phPRes{display:none!important}
+/* 2026-10-31: 시작 화면 덩어리 수직 가운데 정렬 */
+html body .phS>.phS-sp.a{flex:1 1 0!important;min-height:12px} /* 하단 글 제외한 덩어리를 위아래 가운데로 (위·아래 여백 같게) */
+html body .phS>.phS-sp.c{flex:1 1 0!important;min-height:12px}
+/* 2026-10-31: 타이틀과 아래 그림 사이 간격을 모든 게임 같게 */
+html body .phS>.phS-logo{min-height:0!important;height:auto!important;margin:0!important}
+html body .phS>.phS-logo+.phS-show,html body .phS>.phS-logo+*+.phS-show{margin-top:26px!important}
+html body .phS>.phS-show{height:auto!important;min-height:34px}
+html body .phS>.phS-sp.b{flex:0 0 0!important;min-height:0!important} /* 간격은 위 규칙(26px)으로 */
+html body .phS .phS-howL{margin-top:18px!important} /* HOW TO PLAY 조금 위로 (무음 알림과 안 부딪히게) */
+
+/* 2026-10-31 난도 버튼: 평소엔 테두리만, 마우스 올림·누를 때만 은은하게 채움 (지난 난도 강조 없앰) */
+html body :is(#ovMode,#modeOv,#modeOv2,#x,body) .phDiff.phDiff.phDiff.phDiff:is(.sel,.last,.on,:focus,:focus-visible):not(:hover):not(:active){background:#12142a!important;box-shadow:none!important;outline:none!important}
+@media (hover:none){html body :is(#ovMode,#modeOv,#modeOv2,#x,body) .phDiff.phDiff.phDiff.phDiff:hover:not(:active){background:#12142a!important;box-shadow:none!important}}
+/* 2026-10-31 랭킹 불러오는 중: 모든 게임 같은 문구·글꼴 */
+html body .phLoad{display:inline-block;font:400 11px "Silkscreen",monospace!important;letter-spacing:.2em!important;color:#8a8fb0!important;text-transform:uppercase;white-space:nowrap}
+html body .phLoad::after{content:"";display:inline-block;width:2.2em;text-align:left;animation:phLoadD 1.2s steps(4) infinite}
+@keyframes phLoadD{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
