@@ -178,7 +178,7 @@ html body #modeOv .phDiff.phDiff.phDiff.on{background:color-mix(in srgb,var(--b)
       <div class="rk"><h4>RANKING</h4><ol id="rkL"></ol></div>
       <div class="row"><button class="phBtn half" id="againB">PLAY AGAIN</button><button class="phBtn sub half" id="homeB">MAIN MENU</button></div>
     </div>
-    <div class="ov" id="rankOv" hidden><div class="gmT phSeg" id="rkT" style="margin-bottom:10px;width:300px"><button class="gmb" data-g="easy">EASY</button><button class="gmb" data-g="normal">NORMAL</button><button class="gmb" data-g="hard">HARD</button><button class="gmb" data-g="master">MASTER</button></div><div class="rk"><h4>RANKING</h4><ol id="rkL2"></ol></div><button class="phBtn sub" id="rankClose">CLOSE</button></div>
+    <div class="ov" id="rankOv" hidden><div class="rk"><h4>RANKING</h4><ol id="rkL2"></ol></div><button class="phBtn sub" id="rankClose">CLOSE</button></div>
   </div>
 </div>
 <script src="music.js?v=20261101-v2"></script>
@@ -260,15 +260,17 @@ function resolve(cell){cell.lt=NOW;cell.ph=Math.random()*6.28;board.push(cell);
     for(const b of m){const p=pos(b.r,b.c);pops.push({x:p.x,y:p.y,c:b.color,t:0})}
     for(const b of drop){const p=pos(b.r,b.c);falls.push({x:p.x,y:p.y,c:b.color,vx:(Math.random()-.5)*90,vy:-120-Math.random()*80,t:0})}
     burst(m,drop.length);
-    const gain=m.length*100+drop.length*200+Math.max(0,combo-1)*100;score+=gain;
+    const gain=Math.round((m.length*100+drop.length*200+Math.max(0,combo-1)*100)*SMUL());score+=gain;
     let sx=0,sy=0;for(const b of m){const p=pos(b.r,b.c);sx+=p.x;sy+=p.y}floats.push({x:sx/m.length,y:sy/m.length,t:0,life:1,txt:"+"+gain.toLocaleString(),big:combo>=2||drop.length>0});
-    if(drop.length>=3)showChain(drop.length+" DROP!","BONUS +"+(drop.length*200).toLocaleString());else if(combo>=2)showChain(combo+" COMBO!","COMBO BONUS")}
+    if(drop.length>=3)showChain(drop.length+" DROP!","BONUS +"+Math.round(drop.length*200*SMUL()).toLocaleString());else if(combo>=2)showChain(combo+" COMBO!","COMBO BONUS")}
   else{combo=0;plop()}
-  if(board.length&&!board.some(b=>b.color!==GRAY)){for(const b of board){const p=pos(b.r,b.c);falls.push({x:p.x,y:p.y,c:b.color,vx:(Math.random()-.5)*90,vy:-120-Math.random()*80,t:0})}score+=board.length*200;board=[]}
+  if(board.length&&!board.some(b=>b.color!==GRAY)){for(const b of board){const p=pos(b.r,b.c);falls.push({x:p.x,y:p.y,c:b.color,vx:(Math.random()-.5)*90,vy:-120-Math.random()*80,t:0})}score+=Math.round(board.length*200*SMUL());board=[]}
   if(!board.length){stageClear();return}
   if(board.some(b=>pos(b.r,b.c).y+R>=LIMIT)||shots<=0){busy=true;bump();setTimeout(gameOver,700);hud();return}
   const cs=available();current=cs.includes(next)?next:pick();next=pick();loadT=NOW;hud()}
-function stageClear(){busy=true;const bn=shots*30;score+=bn;lvl();hud();
+/* 2026-11-19: 난이도 점수 배율 EASY ×0.5 · NORMAL ×1 · HARD ×2 · MASTER ×3 (랭킹은 난이도 통합) */
+const SMUL=()=>({easy:.5,normal:1,hard:2,master:3})[MODE]||1;
+function stageClear(){busy=true;const bn=Math.round(shots*30*SMUL());score+=bn;lvl();hud();
   if(stage>=LEVELS[MODE].limit){ALLC=true;showChain("ALL CLEAR!",LEVELS[MODE].limit+" STAGES");setTimeout(gameOver,1400);return}
   showChain("STAGE CLEAR!",bn?"+"+bn.toLocaleString()+" BONUS":"");
   setTimeout(()=>{if(state!=="play"&&state!=="pause")return;stage++;newStage();showChain("STAGE "+stage,"")},1500)}
@@ -363,12 +365,12 @@ function gameOver(){if(state==="over"||state===null)return;state="over";chkUpd()
   if(!ALLC)showChain(shots<=0?"NO MORE SHOTS":"LIMIT OVER","");setTimeout(()=>{$("overOv").hidden=false},900)}
 function home(){if(goUpd())return;state=null;board=[];shot=null;parts=[];rings=[];floats=[];pops=[];falls=[];["modeOv","overOv","pauseOv","rankOv"].forEach(i=>$(i).hidden=true);$("startOv").hidden=false;score=0;stage=1;hud();draw()}
 function toast(m){let e=document.getElementById("toast");if(!e){e=document.createElement("div");e.id="toast";e.className="toast";document.body.appendChild(e)}e.textContent=m;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),1800)}
-/* ---------- 랭킹 (온라인 · 난도별) ---------- */
+/* ---------- 랭킹 (온라인 · 난이도 통합, 2026-11-19 이전 기록은 시트에서 배율 환산) ---------- */
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const RANK_URL="https://script.google.com/macros/s/AKfycbzkdjVleobj98oyxlC77cUf5txCRiSB6D1zgRWU56pX22ElXAx9R8xFRGnV0nKAUbwC/exec";
 let rkCache=null,myRec=null,RKM="normal";
 function rkSaved(){try{return JSON.parse(store.get("shp-srv")||"null")}catch(e){return null}}
-function rkRows(){const m=new Map();[...(rkCache||[]),...(myRec?[myRec]:[])].forEach(r=>{const k=r.n+"|"+r.s+"|"+(r.v||1)+"|"+r.m;if(!m.has(k))m.set(k,r)});return [...m.values()].filter(r=>String(r.m).toLowerCase()===RKM).sort((a,b)=>Number(b.s)-Number(a.s))}
+function rkRows(){const m=new Map();[...(rkCache||[]),...(myRec?[myRec]:[])].forEach(r=>{const k=r.n+"|"+r.s+"|"+(r.v||1)+"|"+r.m;if(!m.has(k))m.set(k,r)});return [...m.values()].sort( /* 2026-11-19: 난이도 통합 (배율로 비교, 난이도는 뱃지로만) */(a,b)=>Number(b.s)-Number(a.s))}
 function rkDraw(el){const l=rkRows().slice(0,20);let hit=false;
   el.innerHTML=l.length?l.map((r,i)=>{const me=!hit&&myRec&&r.n===myRec.n&&Number(r.s)===myRec.s;if(me)hit=true;return `<li class="${me?"me":""}"><em>${i+1}</em><span class="nm">${esc(r.n)}</span>${window.phLv?phLv(String(r.m||"normal").toUpperCase()):""}<small>STAGE ${r.v||1}</small><b>${Number(r.s).toLocaleString()}</b></li>`}).join(""):`<li class="empty">아직 기록이 없어요</li>`}
 async function rkFetch(){for(let i=0;i<3;i++){try{const j=await fetch(RANK_URL+"?g=shootingpang&_="+Date.now(),{cache:"no-store"}).then(r=>r.json());if(j&&Array.isArray(j.top)){rkCache=j.top;store.set("shp-srv",JSON.stringify(j.top));return true}}catch(e){}await new Promise(r=>setTimeout(r,1200*(i+1)))}return false}
@@ -388,7 +390,7 @@ addEventListener("visibilitychange",()=>{if(!document.hidden&&state!=="play")chk
 /* ---------- 버튼 연결 ---------- */
 $("startB").onclick=()=>{unlockAudio();$("modeOv").hidden=false};
 const lvMark=m=>document.querySelectorAll("#modeOv .phDiff[data-m]").forEach(b=>b.classList.toggle("on",b.dataset.m===m));
-document.querySelectorAll("#modeOv .phDiff[data-m]").forEach(b=>b.onclick=()=>{MODE=b.dataset.m;PP.set("lv",MODE);lvMark(MODE);phTut("shp-tut",{"goal": "팡팡이를 쏘아 같은 친구 3마리를 모으면 팡!<br>천장과 떨어진 친구들은 우르르!<br><br>모두 터뜨리면 스테이지 클리어<br>남은 발사는 1발에 30점 보너스<br>발사를 다 쓰거나 빨간 선에 닿으면 끝", "touch": [["끌어서 조준", "놓으면 발사"], ["벽", "튕겨서 맞히기"], ["NEXT 누르기", "다음 팡팡이와 교환"], ["EASY", "조준선 표시"], ["MASTER 회색", "안 터져요 · 떨어뜨리기"]]},start)});
+document.querySelectorAll("#modeOv .phDiff[data-m]").forEach(b=>b.onclick=()=>{MODE=b.dataset.m;PP.set("lv",MODE);lvMark(MODE);phTut("shp-tut",{"goal": "팡팡이를 쏘아 같은 친구 3마리를 모으면 팡!<br>천장과 떨어진 친구들은 우르르!<br><br>모두 터뜨리면 스테이지 클리어<br>남은 발사는 1발에 30점 보너스<br>점수 배율 EASY ×0.5 · NORMAL ×1 · HARD ×2 · MASTER ×3<br>발사를 다 쓰거나 빨간 선에 닿으면 끝", "touch": [["끌어서 조준", "놓으면 발사"], ["벽", "튕겨서 맞히기"], ["NEXT 누르기", "다음 팡팡이와 교환"], ["EASY", "조준선 표시"], ["MASTER 회색", "안 터져요 · 떨어뜨리기"]]},start)});
 $("modeBack").onclick=()=>{$("modeOv").hidden=true};$("againB").onclick=start;$("homeB").onclick=home;
 function v2init(){try{if(window.PangMusic&&!PangMusic.enabled)PangMusic.setEnabled(true)}catch(e){}FX=PP.get("fx",true)!==false;GUIDE=PP.get("guide",true)!==false;lvMark("normal");
   sfxWas=AUD.sfxOn();sndApply();AUD.on(()=>{sndApply();const on=AUD.sfxOn();if(on&&!sfxWas){unlockAudio();tone("sine",660,880,.1,.03)}sfxWas=on});
